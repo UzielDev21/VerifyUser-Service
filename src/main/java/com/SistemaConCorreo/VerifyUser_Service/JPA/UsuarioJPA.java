@@ -26,11 +26,26 @@ public class UsuarioJPA {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "nombre", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "enable")
+    @Column(name = "enable", nullable = false)
     private int isEnabled;
+
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+
+    @Column(name = "apellidopaterno", nullable = false)
+    private String apellidoPaterno;
+
+    @Column(name = "apellidomaterno")
+    private String apellidoMaterno;
+
+    @Column(name = "telefono", nullable = false)
+    private String telefono;
+
+    @Column(name = "sexo", nullable = false)
+    private String sexo;
 
     @ManyToOne
     @JoinColumn(name = "ROL_ID")
@@ -45,12 +60,17 @@ public class UsuarioJPA {
 
     }
 
-    public UsuarioJPA(int idUsuario, String nombre, String email, String password, int isEnabled, RolJPA rol) {
+    public UsuarioJPA(int idUsuario, String nombre, String email, String password, int isEnabled, String username, String apellidoPaterno, String apellidoMaterno, String telefono, String sexo, RolJPA rol) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.email = email;
         this.password = password;
         this.isEnabled = isEnabled;
+        this.username = username;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.telefono = telefono;
+        this.sexo = sexo;
         this.rol = rol;
     }
 
@@ -92,6 +112,46 @@ public class UsuarioJPA {
 
     public void setIsEnabled(int isEnabled) {
         this.isEnabled = isEnabled;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getApellidoPaterno() {
+        return apellidoPaterno;
+    }
+
+    public void setApellidoPaterno(String apellidoPaterno) {
+        this.apellidoPaterno = apellidoPaterno;
+    }
+
+    public String getApellidoMaterno() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+        this.apellidoMaterno = apellidoMaterno;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
     public RolJPA getRol() {
