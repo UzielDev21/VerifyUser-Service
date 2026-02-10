@@ -1,5 +1,6 @@
 package com.SistemaConCorreo.VerifyUser_Service.JPA;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,47 +8,58 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "USUARIOS")
-public class Usuario {
+@Table(name = "USUARIO")
+public class UsuarioJPA {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "idusuario", nullable = false)
+    private int idUsuario;
 
+    @Column(name = "nombre", nullable = false)
     private String nombre;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "nombre", nullable = false)
     private String password;
 
-    // Mapeo del NUMBER(1) de Oracle a Boolean
-    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
-    private boolean enabled;
+    @Column(name = "enable")
+    private int isEnabled;
 
     @ManyToOne
     @JoinColumn(name = "ROL_ID")
-    private Rol rol;
+    private RolJPA rol;
 
-    public Usuario() {
+    @PrePersist
+    private void prePersiste() {
+        isEnabled = 0;
+    }
+
+    public UsuarioJPA() {
 
     }
 
-    public Usuario(Long id, String nombre, String email, String password, boolean enabled, Rol rol) {
-        this.id = id;
+    public UsuarioJPA(int idUsuario, String nombre, String email, String password, int isEnabled, RolJPA rol) {
+        this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.email = email;
         this.password = password;
-        this.enabled = enabled;
+        this.isEnabled = isEnabled;
         this.rol = rol;
     }
 
-    public Long getId() {
-        return id;
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNombre() {
@@ -74,19 +86,19 @@ public class Usuario {
         this.password = password;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public int getIsEnabled() {
+        return isEnabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setIsEnabled(int isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
-    public Rol getRol() {
+    public RolJPA getRol() {
         return rol;
     }
 
-    public void setRol(Rol rol) {
+    public void setRol(RolJPA rol) {
         this.rol = rol;
     }
 
