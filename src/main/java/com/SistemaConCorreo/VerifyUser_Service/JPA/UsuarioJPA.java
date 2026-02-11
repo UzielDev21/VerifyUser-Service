@@ -49,7 +49,7 @@ public class UsuarioJPA {
 
     @ManyToOne
     @JoinColumn(name = "ROL_ID")
-    private RolJPA rol;
+    public RolJPA rolJPA;
 
     @PrePersist
     private void prePersiste() {
@@ -60,7 +60,7 @@ public class UsuarioJPA {
 
     }
 
-    public UsuarioJPA(int idUsuario, String nombre, String email, String password, int isEnabled, String username, String apellidoPaterno, String apellidoMaterno, String telefono, String sexo, RolJPA rol) {
+    public UsuarioJPA(int idUsuario, String nombre, String email, String password, int isEnabled, String username, String apellidoPaterno, String apellidoMaterno, String telefono, String sexo, RolJPA rolJPA) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.email = email;
@@ -71,7 +71,7 @@ public class UsuarioJPA {
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
         this.sexo = sexo;
-        this.rol = rol;
+        this.rolJPA = rolJPA;
     }
 
     public int getIdUsuario() {
@@ -154,12 +154,12 @@ public class UsuarioJPA {
         this.sexo = sexo;
     }
 
-    public RolJPA getRol() {
-        return rol;
+    public RolJPA getRolJPA() {
+        return rolJPA;
     }
 
-    public void setRol(RolJPA rol) {
-        this.rol = rol;
+    public void setRolJPA(RolJPA rolJPA) {
+        this.rolJPA = rolJPA;
     }
 
 }

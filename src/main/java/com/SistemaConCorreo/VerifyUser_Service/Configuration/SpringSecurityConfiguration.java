@@ -2,6 +2,7 @@ package com.SistemaConCorreo.VerifyUser_Service.Configuration;
 
 import com.SistemaConCorreo.VerifyUser_Service.Filter.JwtAuthFilter;
 import com.SistemaConCorreo.VerifyUser_Service.Service.JwtService;
+import com.SistemaConCorreo.VerifyUser_Service.Service.TokenBlackListService;
 import com.SistemaConCorreo.VerifyUser_Service.Service.UserDetailsJPAService;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -28,10 +29,15 @@ public class SpringSecurityConfiguration {
 
     private final UserDetailsJPAService userDetailsJPAService;
     private final JwtService jwtService;
+    private final TokenBlackListService tokenBlackListService;
 
-    public SpringSecurityConfiguration(UserDetailsJPAService userDetailsJPAService, JwtService jwtService) {
+    public SpringSecurityConfiguration(
+            UserDetailsJPAService userDetailsJPAService,
+            JwtService jwtService,
+            TokenBlackListService tokenBlackListService) {
         this.userDetailsJPAService = userDetailsJPAService;
         this.jwtService = jwtService;
+        this.tokenBlackListService = tokenBlackListService;
     }
 
     @Bean
@@ -40,7 +46,7 @@ public class SpringSecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // Login, Registro, Verificar
+                .requestMatchers("/api/login").permitAll() // Login, Registro, Verificar
                 .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsJPAService)
@@ -56,7 +62,7 @@ public class SpringSecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager() {
 
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider((UserDetailsService) userDetailsJPAService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsJPAService);
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
 
@@ -64,14 +70,14 @@ public class SpringSecurityConfiguration {
 
     @Bean
     public JwtAuthFilter jwtAuthFilter() {
-        return new JwtAuthFilter(jwtService, userDetailsJPAService);
+        return new JwtAuthFilter(jwtService, userDetailsJPAService, tokenBlackListService);
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:8081")); // URL del Cliente
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
         corsConfiguration.setAllowCredentials(true);

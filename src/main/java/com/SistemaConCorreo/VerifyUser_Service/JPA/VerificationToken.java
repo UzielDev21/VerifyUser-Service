@@ -19,9 +19,9 @@ public class VerificationToken {
     private Long id;
     private String token;
 
-    @OneToOne(targetEntity = Usuario.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = UsuarioJPA.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "USUARIO_ID")
-    private Usuario usuario;
+    private UsuarioJPA usuario;
 
     private LocalDateTime fechaExpiracion;
 
@@ -29,7 +29,7 @@ public class VerificationToken {
     public VerificationToken() {
     }
 
-    public VerificationToken(String token, Usuario usuario) {
+    public VerificationToken(String token, UsuarioJPA usuario) {
         this.token = token;
         this.usuario = usuario;
         this.fechaExpiracion = LocalDateTime.now().plusHours(24); // Expira en 24h
@@ -51,11 +51,11 @@ public class VerificationToken {
         this.token = token;
     }
 
-    public Usuario getUsuario() {
+    public UsuarioJPA getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UsuarioJPA usuario) {
         this.usuario = usuario;
     }
 

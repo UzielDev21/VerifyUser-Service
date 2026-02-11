@@ -1,7 +1,9 @@
 package com.SistemaConCorreo.VerifyUser_Service.Filter;
 
 import com.SistemaConCorreo.VerifyUser_Service.Service.JwtService;
+import com.SistemaConCorreo.VerifyUser_Service.Service.TokenBlackListService;
 import com.SistemaConCorreo.VerifyUser_Service.Service.UserDetailsJPAService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,43 +15,85 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsJPAService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final TokenBlackListService tokenBlackListService;
 
-    public JwtAuthFilter(JwtService jwtService, UserDetailsJPAService userDetailsService) {
+    public JwtAuthFilter(
+            JwtService jwtService,
+            UserDetailsService userDetailsService,
+            TokenBlackListService tokenBlackListService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.tokenBlackListService = tokenBlackListService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+
+        String path = request.getServletPath();
+        return path.equals("/api/login")
+                || path.equals("/auth/login")
+                || path.startsWith("/static.css/")
+                || path.startsWith("/static.js/");
+    }
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
+        String token = authHeader.substring(7);
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+        if (!jwtService.isTokenInvalid(token)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invalido");
+            return;
+        }
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
+        Claims claims = jwtService.GetAllClaims(token);
+        String username = claims.getSubject();
+        String jti = claims.getId();
+
+        if (tokenBlackListService.isTokenInvalid(jti)) {
+
+            response.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED,
+                    "Token inhabilitado por logout");
+            return;
+        }
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if (!userDetails.isEnabled()) {
+                response.sendError(
+                        HttpServletResponse.SC_UNAUTHORIZED,
+                        "Usuario deshabilitado"
                 );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                return;
             }
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities());
+            
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
         }
         filterChain.doFilter(request, response);
     }
