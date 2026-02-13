@@ -22,9 +22,9 @@ public class UserDetailsJPAService implements UserDetailsService {
 
         UsuarioJPA usuario = iUsuarioRepository.findByUsername(username);
 
-        if (usuario.getIsEnabled() == 0) {
-            throw new UsernameNotFoundException("El usuario no ha verificado su correo.");
-        }
+//        if (usuario.getIsEnabled() == 0) {
+//            throw new UsernameNotFoundException("El usuario no ha verificado su correo.");
+//        }
 
         if (usuario == null) {
             throw new UsernameNotFoundException("Usuario no encontrado" + username);

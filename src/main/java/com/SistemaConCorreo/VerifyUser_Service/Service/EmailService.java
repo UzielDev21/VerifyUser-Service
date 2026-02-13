@@ -20,7 +20,7 @@ public class EmailService {
             String nombre,
             String tokenEmail) throws MessagingException {
         
-        String verificationLink = "http://localhost:8080/api/auth/verify=account?tokenEmail=" + tokenEmail;
+        String verificationLink = "http://localhost:8080/api/auth/verify?tokenEmail=" + tokenEmail;
         
         String htmlContent = """
                             <div style="font-family: Arial, Sans-serif; line-height: 1.5;">

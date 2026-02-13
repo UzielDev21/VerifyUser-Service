@@ -80,6 +80,7 @@ public class UsuarioJPADAOImplementation implements IUsuarioJPA {
     }
 
     @Override
+    @Transactional
     public Result VerifyUSer(int idUsuario) {
 
         Result result = new Result();
