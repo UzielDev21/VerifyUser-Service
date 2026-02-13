@@ -18,7 +18,7 @@ public class UsuarioJPA {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idusuario", nullable = false)
-    private int idUsuario;
+    private Integer idUsuario;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -29,8 +29,8 @@ public class UsuarioJPA {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "enable", nullable = false)
-    private int isEnabled;
+    @Column(name = "enabled", nullable = false)
+    private Integer isEnabled;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -48,7 +48,7 @@ public class UsuarioJPA {
     private String sexo;
 
     @ManyToOne
-    @JoinColumn(name = "ROL_ID")
+    @JoinColumn(name = "idrol")
     public RolJPA rolJPA;
 
     @PrePersist
@@ -60,7 +60,7 @@ public class UsuarioJPA {
 
     }
 
-    public UsuarioJPA(int idUsuario, String nombre, String email, String password, int isEnabled, String username, String apellidoPaterno, String apellidoMaterno, String telefono, String sexo, RolJPA rolJPA) {
+    public UsuarioJPA(Integer idUsuario, String nombre, String email, String password, Integer isEnabled, String username, String apellidoPaterno, String apellidoMaterno, String telefono, String sexo, RolJPA rolJPA) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.email = email;
@@ -74,11 +74,11 @@ public class UsuarioJPA {
         this.rolJPA = rolJPA;
     }
 
-    public int getIdUsuario() {
+    public Integer getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
     }
 
@@ -106,11 +106,11 @@ public class UsuarioJPA {
         this.password = password;
     }
 
-    public int getIsEnabled() {
+    public Integer getIsEnabled() {
         return isEnabled;
     }
 
-    public void setIsEnabled(int isEnabled) {
+    public void setIsEnabled(Integer isEnabled) {
         this.isEnabled = isEnabled;
     }
 

@@ -14,7 +14,7 @@ public class RolJPA {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idrol")
-    private int idRol;
+    private Integer idRol;
 
     @Column(name = "nombrerol")
     private String nombreRol;
@@ -23,16 +23,16 @@ public class RolJPA {
 
     }
 
-    public RolJPA(int idRol, String nombreRol) {
+    public RolJPA(Integer idRol, String nombreRol) {
         this.idRol = idRol;
         this.nombreRol = nombreRol;
     }
 
-    public int getIdRol() {
+    public Integer getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(int idRol) {
+    public void setIdRol(Integer idRol) {
         this.idRol = idRol;
     }
 

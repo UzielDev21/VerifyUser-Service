@@ -53,7 +53,7 @@ public class UsuarioJPADAOImplementation implements IUsuarioJPA {
         try {
 
             TypedQuery<UsuarioJPA> queryUsuario = entityManager.createQuery(
-                    "FROM UsuarioJPA usuarioJPa WHERE UsuarioJPA.username = :username",
+                    "FROM UsuarioJPA usuarioJPA WHERE usuarioJPA.username = :username",
                     UsuarioJPA.class).setParameter("username", usuarioJPA.getUsername());
 
             List<UsuarioJPA> usuarios = queryUsuario.getResultList();

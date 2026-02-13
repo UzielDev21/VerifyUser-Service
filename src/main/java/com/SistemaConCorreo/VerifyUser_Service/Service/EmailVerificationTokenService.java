@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailVerificatonTokenService {
+public class EmailVerificationTokenService {
 
     private final Map<String, Integer> verificationTokens = new ConcurrentHashMap<>();
     private final Map<String, Long> tokenExpirations = new ConcurrentHashMap<>();

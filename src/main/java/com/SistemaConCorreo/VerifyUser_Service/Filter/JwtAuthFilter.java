@@ -2,7 +2,6 @@ package com.SistemaConCorreo.VerifyUser_Service.Filter;
 
 import com.SistemaConCorreo.VerifyUser_Service.Service.JwtService;
 import com.SistemaConCorreo.VerifyUser_Service.Service.TokenBlackListService;
-import com.SistemaConCorreo.VerifyUser_Service.Service.UserDetailsJPAService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,12 +35,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
 
         String path = request.getServletPath();
-        return path.equals("/api/login")
-                || path.equals("/auth/login")
+        return path.startsWith("/api/login")
+                || path.startsWith("/api/usuario")
+                || path.startsWith("/auth/login")
                 || path.startsWith("/static.css/")
                 || path.startsWith("/static.js/");
     }
-
+    
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -90,7 +90,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     userDetails,
                     null,
                     userDetails.getAuthorities());
-            
+
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
 

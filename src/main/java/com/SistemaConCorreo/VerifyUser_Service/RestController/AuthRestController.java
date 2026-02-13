@@ -129,6 +129,4 @@ public class AuthRestController {
         return ResponseEntity.status(result.status).body(result);
     }
 
-    
-    
 }
