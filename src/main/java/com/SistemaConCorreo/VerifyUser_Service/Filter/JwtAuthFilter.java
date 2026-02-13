@@ -37,11 +37,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         return path.startsWith("/api/login")
                 || path.startsWith("/api/usuario")
+                || path.startsWith("/api/auth/verify")
                 || path.startsWith("/auth/login")
-                || path.startsWith("/static.css/")
-                || path.startsWith("/static.js/");
+                || path.startsWith("/css/**")
+                || path.startsWith("/js/**")
+                || path.startsWith("/images/**")
+                || path.equals("/error");
     }
-    
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
