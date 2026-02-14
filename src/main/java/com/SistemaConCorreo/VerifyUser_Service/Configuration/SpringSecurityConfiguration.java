@@ -83,7 +83,7 @@ public class SpringSecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:8080")); // URL del Cliente
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:8080")); // URL del Cliente
         corsConfiguration.setAllowedOriginPatterns(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));

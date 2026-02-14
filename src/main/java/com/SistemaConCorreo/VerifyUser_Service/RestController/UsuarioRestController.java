@@ -1,6 +1,7 @@
 package com.SistemaConCorreo.VerifyUser_Service.RestController;
 
 import com.SistemaConCorreo.VerifyUser_Service.DAO.UsuarioJPADAOImplementation;
+import com.SistemaConCorreo.VerifyUser_Service.JPA.RolJPA;
 import com.SistemaConCorreo.VerifyUser_Service.JPA.UsuarioJPA;
 import com.SistemaConCorreo.VerifyUser_Service.Model.Result;
 import com.SistemaConCorreo.VerifyUser_Service.Service.EmailVerificationTokenService;
@@ -53,6 +54,13 @@ public class UsuarioRestController {
         Result result = new Result();
 
         try {
+            
+            if (usuarioJPA.rolJPA == null) {
+                RolJPA rolJPA = new RolJPA();
+                rolJPA.setIdRol(1);
+                usuarioJPA.setRolJPA(rolJPA);
+            }
+            
             result = usuarioService.registrarUsuario(usuarioJPA);
 
             if (result.status == 0) {
